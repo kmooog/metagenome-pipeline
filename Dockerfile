@@ -45,6 +45,7 @@ RUN make install
 
 RUN wget https://bootstrap.pypa.io/get-pip.py
 RUN python get-pip.py
+WORKDIR /root
 
 # cutadapt(for TrimGalore)
 RUN pip install --user --upgrade cutadapt
