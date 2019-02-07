@@ -62,11 +62,12 @@ RUN rm FLASH-1.2.11-Linux-x86_64.tar.gz
 ENV PATH $PATH:/FLASH-1.2.11-Linux-x86_64
 
 # BOWTIE2
-wget https://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.3.4.3/bowtie2-2.3.4.3-source.zip
-RUN unzip bowtie2-2.3.4.3-source.zip
-RUN rm bowtie2-2.3.4.3-source.zip
-ENV PATH $PATH:/bowtie2-2.3.4.3
+RUN wget https://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.3.4.3/bowtie2-2.3.4.3-linux-x86_64.zip
+RUN unzip bowtie2-2.3.4.3-linux-x86_64.zip
+RUN rm bowtie2-2.3.4.3-linux-x86_64.zip
 
+
+WORKDIR ./
 CMD ["bash"]
 VOLUME /mydata
 
