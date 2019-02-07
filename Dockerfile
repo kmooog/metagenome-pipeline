@@ -55,6 +55,17 @@ RUN wget https://github.com/FelixKrueger/TrimGalore/archive/0.5.0.zip
 RUN unzip 0.5.0.zip && rm 0.5.0.zip
 ENV PATH $PATH:/TrimGalore-0.5.0
 
+#FLASh
+RUN wget http://ccb.jhu.edu/software/FLASH/FLASH-1.2.11-Linux-x86_64.tar.gz
+RUN tar -xvf  FLASH-1.2.11-Linux-x86_64.tar.gz
+RUN rm FLASH-1.2.11-Linux-x86_64.tar.gz
+ENV PATH $PATH:/FLASH-1.2.11-Linux-x86_64
+
+# BOWTIE2
+wget https://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.3.4.3/bowtie2-2.3.4.3-source.zip
+RUN unzip bowtie2-2.3.4.3-source.zip
+RUN rm bowtie2-2.3.4.3-source.zip
+
 
 CMD ["bash"]
 VOLUME /mydata
