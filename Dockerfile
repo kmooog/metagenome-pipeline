@@ -65,7 +65,13 @@ ENV PATH $PATH:/FLASH-1.2.11-Linux-x86_64
 RUN wget https://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.3.4.3/bowtie2-2.3.4.3-linux-x86_64.zip
 RUN unzip bowtie2-2.3.4.3-linux-x86_64.zip
 RUN rm bowtie2-2.3.4.3-linux-x86_64.zip
+ENV PATH $PATH:/bowtie2-2.3.4.3-linux-x86_64
 
+# MEGAHIT ## G++のインストールが必要っぽいが一旦飛ばす
+RUN git clone https://github.com/voutcn/megahit.git
+WORKDIR ./megahit
+make
+WORKDIR ./
 
 WORKDIR ./
 CMD ["bash"]

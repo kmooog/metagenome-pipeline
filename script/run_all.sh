@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# our server only allow 80 qsub for one user
+
 # 01_TrimGalore
 mkdir 01_TrimGalore
 cd 01_TrimGalore
@@ -22,6 +24,23 @@ cd 03_bowtie2
 cp ../02_Flash/*.extendedFrags.fastq .
 sh run_bowtie2.sh
 cd ..
+
+# 04_megahit
+cd 04_megahit 
+cp ../03_bowtie2/*.nophix.fastq .
+for file in `ls *.nophix.fastq`; do
+   export FASTQ_FILE=${file}
+   qsub -q l run_megahit.sh
+   export FASTQ_FILE=""   
+done
+cd ..
+
+# 05_Prodigal
+cd 05_Prodigal
+sh run_Prodigal.sh
+cd ..
+
+# 06_eggnog_mapper
 
 
 
