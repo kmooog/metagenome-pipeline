@@ -13,6 +13,8 @@ file_list_merged = []
 
 cwd = Path.cwd()
 
+eggnog_mapper_path = "/work/G10800/kumay/eggnog-mapper/emapper.py"
+
 for file_tmp in file_list:
     if file_tmp.find("_R1_") != -1:
         file_list_merged.append(file_tmp)
@@ -101,5 +103,50 @@ class _4_megahit(luigi.Task):
            outputDict["output" + str(i)] = luigi.LocalTarget('04_megahit/' + outFile + ".nophixassembled/final.contigs.fa")
         return outputDict
 
+
+class _5_Prodigal(luigi.Task):
+    task_namespace = 'metagenomes'
+
+    def requires(self):
+        print("_5_Prodigal: requires")
+        return _4_megahit()
+
+    def run(self):
+        print("_5_Prodigal: run")
+        cmd = 'mkdir 05_Prodigal && cd 05_Prodigal sh {0}run_Prodigal.sh && cd ..'.format(script_path)
+        os.system(cmd)
+    def output(self):
+        print("_5_Prodigal: output")
+        outputDict = {}
+        for i, outFile in enumerate(file_list_merged):
+           outputDict["output" + str(i)] = luigi.LocalTarget('05_Prodigal/' + outFile + ".nophixassembled.faa")
+           outputDict["output" + str(i)] = luigi.LocalTarget('05_Prodigal/' + outFile + ".nophixassembled.fna")
+        return outputDict
+
+class _6_eggnog_mapper(luigi.Task):
+    task_namespace = 'metagenomes'
+    # ここもshell scriptにしてqsubしたほうが良さそう
+    def requires(self):
+        print("_6_eggnog_mapper: requires")
+        return _5_Prodigal()
+
+    def run(self):
+        print("_6_eggnog_mapper: run")
+        p = pathlib.Path('06_eggnog-mapper')
+        p.mkdir()
+        workdir = cwd / '06_eggnog-mapper'
+        for i, outFile in enumerate(file_list_merged):
+           subprocess.Popen('qsub -q l {0}run_eggnog-mapper.sh -v EMAPPER_PATH={1},FNA_FILE={2},OUTPUT_FILE={3}'.format(script_path,eggnog_mapper_path,outFile + ".nophixassembled.fna", outFile + ".emapper"),cwd=workdir)
+    def output(self):
+        print("_6_eggnog_mapper: output")
+        outputDict = {}
+        for i, outFile in enumerate(file_list_merged):
+           outputDict["output" + str(i)] = luigi.LocalTarget('06_eggnog-mapper/' + outFile + ".emapper")
+        return outputDict
+
+
+
+
+
 if __name__ == '__main__':
-    luigi.run(['metagenomes._4_megahit', '--workers', '1', '--local-scheduler'])
+    luigi.run(['metagenomes._5_Prodigal', '--workers', '1', '--local-scheduler'])
