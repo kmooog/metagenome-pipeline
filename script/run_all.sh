@@ -26,11 +26,12 @@ sh run_bowtie2.sh
 cd ..
 
 # 04_megahit
+mkdir 04_megahit
 cd 04_megahit 
 cp ../03_bowtie2/*.nophix.fastq .
 for file in `ls *.nophix.fastq`; do
    export FASTQ_FILE=${file}
-   qsub -q l run_megahit.sh
+   qsub -q l /work/G10800/kumay/metagenome-pipeline/script/run_megahit.sh
    export FASTQ_FILE=""   
 done
 cd ..
