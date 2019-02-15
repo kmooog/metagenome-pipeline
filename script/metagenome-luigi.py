@@ -100,7 +100,8 @@ class _4_megahit(luigi.Task):
         print("_4_megahit: output")
         outputDict = {}
         for i, outFile in enumerate(file_list_merged):
-           outputDict["output" + str(i)] = luigi.LocalTarget('04_megahit/' + outFile + ".nophixassembled/final.contigs.fa")
+           outputDict["output" + str(i)] = luigi.LocalTarget('04_megahit/' + outFile + "/final.contigs.fa")
+           print('04_megahit/' + outFile + "/final.contigs.fa")
         return outputDict
 
 
@@ -113,19 +114,25 @@ class _5_Prodigal(luigi.Task):
 
     def run(self):
         print("_5_Prodigal: run")
-        cmd = 'mkdir 05_Prodigal && cd 05_Prodigal sh {0}run_Prodigal.sh && cd ..'.format(script_path)
-        os.system(cmd)
+        current_path = cwd/'05_Prodigal'
+        current_path.mkdir()
+        for outFile in file_list_merged:
+           print(outFile)
+           print('cp ../04_megahit/{0}/final.contigs.fa ./{0}'.format(outFile))
+           print('prodigal -d {0}.fna -a {0}.faa -i {0} -p meta -o {0}.genes -q'.format(outFile))           
+           subprocess.Popen('cp ../04_megahit/{0}/final.contigs.fa ./{0}'.format(outFile).split(),cwd=current_path)
+           subprocess.Popen('prodigal -d {0}.fna -a {0}.faa -i {0} -p meta -o {0}.genes -q'.format(outFile).split(),cwd=current_path)
+
     def output(self):
         print("_5_Prodigal: output")
         outputDict = {}
         for i, outFile in enumerate(file_list_merged):
-           outputDict["output" + str(i)] = luigi.LocalTarget('05_Prodigal/' + outFile + ".nophixassembled.faa")
-           outputDict["output" + str(i)] = luigi.LocalTarget('05_Prodigal/' + outFile + ".nophixassembled.fna")
+           outputDict["output" + str(i)] = luigi.LocalTarget('05_Prodigal/' + outFile + ".faa")
+           outputDict["output" + str(i)] = luigi.LocalTarget('05_Prodigal/' + outFile + ".fna")
         return outputDict
 
 class _6_eggnog_mapper(luigi.Task):
     task_namespace = 'metagenomes'
-    # ここもshell scriptにしてqsubしたほうが良さそう
     def requires(self):
         print("_6_eggnog_mapper: requires")
         return _5_Prodigal()
@@ -136,7 +143,8 @@ class _6_eggnog_mapper(luigi.Task):
         p.mkdir()
         workdir = cwd / '06_eggnog-mapper'
         for i, outFile in enumerate(file_list_merged):
-           subprocess.Popen('qsub -q l {0}run_eggnog-mapper.sh -v EMAPPER_PATH={1},FNA_FILE={2},OUTPUT_FILE={3}'.format(script_path,eggnog_mapper_path,outFile + ".nophixassembled.fna", outFile + ".emapper"),cwd=workdir)
+           subprocess.Popen('cp ../05_Prodigal/{0}.fna {0}.fna'.format(outFile).split(),cwd=workdir)
+           subprocess.Popen('qsub -q l {0}run_eggnog-mapper.sh -v EMAPPER_DIR={1},EMAPPER_PATH={2},FNA_FILE={3},OUTPUT_FILE={4}'.format(script_path,str(workdir),eggnog_mapper_path,outFile + ".fna", outFile + ".emapper").split(),cwd=workdir)
     def output(self):
         print("_6_eggnog_mapper: output")
         outputDict = {}
@@ -149,4 +157,4 @@ class _6_eggnog_mapper(luigi.Task):
 
 
 if __name__ == '__main__':
-    luigi.run(['metagenomes._5_Prodigal', '--workers', '1', '--local-scheduler'])
+    luigi.run(['metagenomes._6_eggnog_mapper', '--workers', '1', '--local-scheduler'])
