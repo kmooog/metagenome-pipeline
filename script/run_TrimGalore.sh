@@ -1,6 +1,6 @@
 #!/bin/sh
-cd ${TRIMGALORE_DIR}
-trim_galore --paired  ${FASTQ_FILE} ${FASTQ_FILE/_1/_2}
+cd $1 
+trim_galore --paired  ${2}_1.fq.gz ${2}_2.fq.gz --dont_gzip
 
 
 

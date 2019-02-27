@@ -1,5 +1,5 @@
 #!/bin/sh
-cd ${EMAPPER_DIR} 
-python2 ${EMAPPER_PATH} -i ${FNA_FILE} --output ${OUTPUT_FILE} -m diamond --usemem --cpu 40
+cd $1 
+python2 $2 -i $3 --output $4 -m diamond --usemem --cpu 20
 
 

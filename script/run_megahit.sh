@@ -1,7 +1,6 @@
 #!/bin/sh
-cd ${MEGAHIT_DIR} 
-megahit -r ${FASTQ_FILE} -o ${FASTQ_FILE/.fastq/assembled}
-echo "MEGAHIT_DIR:$MEGAHIT_DIR"
-echo "megahit -r ${FASTQ_FILE}.nophix.fastq -o ${FASTQ_FILE/.fastq/assembled}"
+cd ${2} 
+echo "output is ${1/.fastq/_assembled}"
+megahit -r ${1} -o ${1/.fastq/_assembled}
 
 
