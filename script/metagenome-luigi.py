@@ -5,11 +5,11 @@ import os
 import pathlib
 from pathlib import Path
 import sys
-
 args = sys.argv
 
 if len(args) != 3:
    print(args)
+   print("usage: python metagenome-luigi.py FILE_NAME WORKING_DIR")
    print("please specify only one file name and working dir. if you have test_1.fq.gz and test_2.fq.gz, please give \"test\" as an argument.")
    sys.exit()
 filename = args[1]
@@ -18,7 +18,7 @@ cwd = Path.cwd()
 workind_dir = args[2]
 
 eggnog_mapper_path = "/work/G10800/kumay/eggnog-mapper/emapper.py"
-
+fmappath = "/work/G10800/kumay/FMAP"
 script_path = "/work/G10800/kumay/metagenome-pipeline/script/"
 
 class _1_TrimGalore(luigi.Task):
@@ -80,6 +80,30 @@ class _35_prinseq(luigi.Task):
     def output(self):
         print("_35_prinseq: output")
         return luigi.LocalTarget(filename + "_prinseq.fastq") 
+
+class fmap(luigi.Task):
+    task_namespace = 'metagenomes'
+
+    def requires(self):
+        print("fmap: requires")
+        return _35_prinseq()
+
+    def run(self):
+        print("fmap: run")
+        with open('blastx_hits_{0}.txt'.format(filename), 'w') as output:
+           stdout = subprocess.Popen('perl {0}/FMAP_mapping.pl {1}_prinseq.fastq'.format(fmappath,filename).split(),stdout=subprocess.PIPE,cwd=cwd).stdout.readlines()
+           for line in stdout:
+              output.write(line.decode('utf-8'))
+        with open('abundance_{0}.txt'.format(filename), 'w') as output:
+           stdout = subprocess.Popen('perl {0}/FMAP_quantification.pl blastx_hits_{1}.txt'.format(fmappath,filename).split(),stdout=subprocess.PIPE,cwd=cwd).stdout.readlines()   
+           for line in stdout:
+              output.write(line.decode('utf-8'))
+    def output(self):
+        print("fmap: output")
+        return luigi.LocalTarget("abundance_" + filename + ".txt")
+
+
+
 
 class _4_megahit(luigi.Task):
     task_namespace = 'metagenomes'
@@ -146,4 +170,4 @@ class _7_bwa(luigi.Task):
 
 
 if __name__ == '__main__':
-    luigi.run(['metagenomes._7_bwa', '--workers', '1', '--local-scheduler'])
+    luigi.run(['metagenomes.fmap', '--workers', '1', '--local-scheduler'])
