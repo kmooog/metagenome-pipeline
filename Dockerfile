@@ -68,14 +68,14 @@ RUN rm bowtie2-2.3.4.3-linux-x86_64.zip
 ENV PATH $PATH:/bowtie2-2.3.4.3-linux-x86_64
 
 # MEGAHIT ## G++のインストールが必要っぽいが一旦飛ばす
-RUN git clone https://github.com/voutcn/megahit.git
-WORKDIR ./megahit
-make
-WORKDIR ./
+#RUN git clone https://github.com/voutcn/megahit.git
+#WORKDIR ./megahit
+#make
+#WORKDIR ./
 
-WORKDIR ./
-CMD ["bash"]
-VOLUME /mydata
+#WORKDIR ./
+#CMD ["bash"]
+#VOLUME /mydata
 
 
 
