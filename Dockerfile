@@ -37,18 +37,18 @@ RUN yum -y install \
 # install cmake
 RUN wget https://github.com/Kitware/CMake/releases/download/v3.14.0/cmake-3.14.0.tar.gz
 RUN tar xzvf cmake-3.14.0.tar.gz
-RUN cd cmake-3.14.0
+WORKDIR /cmake-3.14.0
 RUN ./bootstrap
 RUN make
 RUN make install
 
 # update gcc
 
+WORKDIR /root
 RUN yum install centos-release-scl -y
 RUN yum install scl-utils -y
 RUN yum install devtoolset-7-gcc devtoolset-7-gcc-c++ devtoolset-7-binutils -y
 RUN scl enable devtoolset-7 bash
-
 
 # python
 WORKDIR /root
@@ -83,22 +83,17 @@ RUN unzip bowtie2-2.3.4.3-linux-x86_64.zip
 RUN rm bowtie2-2.3.4.3-linux-x86_64.zip
 ENV PATH $PATH:/bowtie2-2.3.4.3-linux-x86_64
 
-# MEGAHIT ## G++のインストールが必要っぽいが一旦飛ばす
-#RUN git clone https://github.com/voutcn/megahit.git
-#WORKDIR ./megahit
-#make
-#WORKDIR ./
-
-#WORKDIR ./
-#CMD ["bash"]
-#VOLUME /mydata
-
 # install megahit
 RUN git clone https://github.com/voutcn/megahit.git
-RUN cd megahit
+WORKDIR /megahit
 RUN git submodule update --init
 RUN mkdir build && cd build
 RUN cmake -DUSE_BMI2=OFF -DCMAKE_BUILD_TYPE=release ..
 RUN make -j4
+ENV PATH $PATH:megahit/build/megahit
 
+#install prinseq
+RUN wget https://sourceforge.net/projects/prinseq/files/standalone/prinseq-lite-0.20.4.tar.gz
+tar xzvf prinseq-lite-0.20.4.tar.gz
+ENV PATH $PATH:/prinseq-lite-0.20.4
 
