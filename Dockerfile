@@ -94,6 +94,6 @@ ENV PATH $PATH:megahit/build/megahit
 
 #install prinseq
 RUN wget https://sourceforge.net/projects/prinseq/files/standalone/prinseq-lite-0.20.4.tar.gz
-tar xzvf prinseq-lite-0.20.4.tar.gz
+RUN tar xzvf prinseq-lite-0.20.4.tar.gz
 ENV PATH $PATH:/prinseq-lite-0.20.4
 
