@@ -34,6 +34,22 @@ RUN yum -y install \
            gdbm-devel \
            python-devel
 
+# install cmake
+RUN wget https://github.com/Kitware/CMake/releases/download/v3.14.0/cmake-3.14.0.tar.gz
+RUN tar xzvf cmake-3.14.0.tar.gz
+RUN cd cmake-3.14.0
+RUN ./bootstrap
+RUN make
+RUN make install
+
+# update gcc
+
+RUN yum install centos-release-scl -y
+RUN yum install scl-utils -y
+RUN yum install devtoolset-7-gcc devtoolset-7-gcc-c++ devtoolset-7-binutils -y
+RUN scl enable devtoolset-7 bash
+
+
 # python
 WORKDIR /root
 RUN wget https://www.python.org/ftp/python/3.5.2/Python-3.5.2.tgz
@@ -77,5 +93,12 @@ ENV PATH $PATH:/bowtie2-2.3.4.3-linux-x86_64
 #CMD ["bash"]
 #VOLUME /mydata
 
+# install megahit
+RUN git clone https://github.com/voutcn/megahit.git
+RUN cd megahit
+RUN git submodule update --init
+RUN mkdir build && cd build
+RUN cmake -DUSE_BMI2=OFF -DCMAKE_BUILD_TYPE=release ..
+RUN make -j4
 
 
