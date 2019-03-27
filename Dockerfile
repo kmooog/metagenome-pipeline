@@ -92,8 +92,13 @@ RUN cmake -DUSE_BMI2=OFF -DCMAKE_BUILD_TYPE=release ..
 RUN make -j4
 ENV PATH $PATH:megahit/build/megahit
 
-#install prinseq
+# install prinseq
 RUN wget https://sourceforge.net/projects/prinseq/files/standalone/prinseq-lite-0.20.4.tar.gz
 RUN tar xzvf prinseq-lite-0.20.4.tar.gz
 ENV PATH $PATH:/prinseq-lite-0.20.4
+
+# install luigi
+RUN pip3 install --upgrade pipi
+RUN pip3 install luigi
+
 
