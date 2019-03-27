@@ -100,7 +100,7 @@ ENV PATH $PATH:/prinseq-lite-0.20.4
 
 # install luigi
 WORKDIR /root
-RUN pip3 install --upgrade pipi
+RUN pip3 install --upgrade pip
 RUN pip3 install luigi
 
 # install in-house pipeline
