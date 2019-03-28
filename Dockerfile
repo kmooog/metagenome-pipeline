@@ -1,55 +1,20 @@
-FROM centos:latest 
+FROM ubuntu:18.04 
 MAINTAINER YOHEI_KUMAGAI
 
 # utils
-RUN yum -y install \ 
-           kernel-devel \
-           kernel-headers \
-           gcc-c++ \
-           patch \
-           libyaml-devel \
-           libffi-devel \
-           autoconf \
-           automake \
-           make \
-           libtool \
-           bison \
-           tk-devel \
-           zip \
-           wget \
+RUN apt-get update
+RUN apt-get install -y 
            tar \
            gcc \
-           zlib \
-           unzip \
-           zlib-devel \
+           g++ \
+           make \
+           zlib1g-dev \
+           gzip \
            bzip2 \
-           bzip2-devel \
-           readline \
-           readline-devel \
-           sqlite \
-           sqlite-devel \
-           openssl \
-           openssl-devel \
+           cmake \
+           python \
            git \
-           gdbm-devel \
-           python-devel
-
-# install cmake
-WORKDIR /root
-RUN wget https://github.com/Kitware/CMake/releases/download/v3.14.0/cmake-3.14.0.tar.gz
-RUN tar xzvf cmake-3.14.0.tar.gz
-WORKDIR cmake-3.14.0
-RUN ./bootstrap
-RUN make
-RUN make install
-
-# update gcc
-
-WORKDIR /root
-RUN yum install centos-release-scl -y
-RUN yum install scl-utils -y
-RUN yum install devtoolset-7-gcc devtoolset-7-gcc-c++ devtoolset-7-binutils -y
-RUN scl enable devtoolset-7 bash
+           --no-install-recommends
 
 # install megahit
 WORKDIR /root
