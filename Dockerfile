@@ -34,18 +34,7 @@ RUN yum -y install \
            gdbm-devel \
            python-devel
 
-# install megahit
-WORKDIR /root
-RUN git clone https://github.com/voutcn/megahit.git
-WORKDIR megahit
-RUN git submodule update --init
-RUN mkdir build
-WORKDIR build
-RUN cmake -DUSE_BMI2=OFF -DCMAKE_BUILD_TYPE=release ..
-RUN make -j4
-ENV PATH $PATH:/megahit/build/megahit
-
-# install came
+# install cmake
 WORKDIR /root
 RUN wget https://github.com/Kitware/CMake/releases/download/v3.14.0/cmake-3.14.0.tar.gz
 RUN tar xzvf cmake-3.14.0.tar.gz
@@ -61,6 +50,17 @@ RUN yum install centos-release-scl -y
 RUN yum install scl-utils -y
 RUN yum install devtoolset-7-gcc devtoolset-7-gcc-c++ devtoolset-7-binutils -y
 RUN scl enable devtoolset-7 bash
+
+# install megahit
+WORKDIR /root
+RUN git clone https://github.com/voutcn/megahit.git
+WORKDIR megahit
+RUN git submodule update --init
+RUN mkdir build
+WORKDIR build
+RUN cmake -DUSE_BMI2=OFF -DCMAKE_BUILD_TYPE=release ..
+RUN make -j4
+ENV PATH $PATH:/megahit/build/megahit
 
 # python
 WORKDIR /root
