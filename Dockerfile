@@ -34,10 +34,22 @@ RUN yum -y install \
            gdbm-devel \
            python-devel
 
-# install cmake
+# install megahit
+WORKDIR /root
+RUN git clone https://github.com/voutcn/megahit.git
+WORKDIR megahit
+RUN git submodule update --init
+RUN mkdir build
+WORKDIR build
+RUN cmake -DUSE_BMI2=OFF -DCMAKE_BUILD_TYPE=release ..
+RUN make -j4
+ENV PATH $PATH:/megahit/build/megahit
+
+# install came
+WORKDIR /root
 RUN wget https://github.com/Kitware/CMake/releases/download/v3.14.0/cmake-3.14.0.tar.gz
 RUN tar xzvf cmake-3.14.0.tar.gz
-WORKDIR /cmake-3.14.0
+WORKDIR cmake-3.14.0
 RUN ./bootstrap
 RUN make
 RUN make install
@@ -64,33 +76,28 @@ RUN python get-pip.py
 WORKDIR /root
 
 # cutadapt(for TrimGalore)
+WORKDIR /root
 RUN pip install --user --upgrade cutadapt
 
 # TrimGalore
+WORKDIR /root
 RUN wget https://github.com/FelixKrueger/TrimGalore/archive/0.5.0.zip 
 RUN unzip 0.5.0.zip && rm 0.5.0.zip
 ENV PATH $PATH:/TrimGalore-0.5.0
 
 #FLASh
+WORKDIR /root
 RUN wget http://ccb.jhu.edu/software/FLASH/FLASH-1.2.11-Linux-x86_64.tar.gz
 RUN tar -xvf  FLASH-1.2.11-Linux-x86_64.tar.gz
 RUN rm FLASH-1.2.11-Linux-x86_64.tar.gz
 ENV PATH $PATH:/FLASH-1.2.11-Linux-x86_64
 
 # BOWTIE2
+WORKDIR /root
 RUN wget https://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.3.4.3/bowtie2-2.3.4.3-linux-x86_64.zip
 RUN unzip bowtie2-2.3.4.3-linux-x86_64.zip
 RUN rm bowtie2-2.3.4.3-linux-x86_64.zip
 ENV PATH $PATH:/bowtie2-2.3.4.3-linux-x86_64
-
-# install megahit
-RUN git clone https://github.com/voutcn/megahit.git
-WORKDIR /megahit
-RUN git submodule update --init
-RUN mkdir build && cd build
-RUN cmake -DUSE_BMI2=OFF -DCMAKE_BUILD_TYPE=release ..
-RUN make -j4
-ENV PATH $PATH:/megahit/build/megahit
 
 # install prinseq
 WORKDIR /root
@@ -105,6 +112,7 @@ RUN pip3 install luigi
 
 # install in-house pipeline
 WORKDIR /root
+RUN pip3 install pathlib
 RUN git clone https://github.com/kmooog/metagenome-pipeline.git
 
 
