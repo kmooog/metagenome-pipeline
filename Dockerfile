@@ -3,7 +3,7 @@ MAINTAINER YOHEI_KUMAGAI
 
 # utils
 RUN apt-get update
-RUN apt-get install -y 
+RUN apt-get install -y \ 
            tar \
            gcc \
            g++ \
