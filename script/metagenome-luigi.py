@@ -14,7 +14,7 @@ if len(args) != 3:
    sys.exit()
 filename = args[1]
 
-cwd = Path.cwd()
+cwd = str(Path.cwd())
 workind_dir = args[2]
 
 eggnog_mapper_path = "/work/G10800/kumay/eggnog-mapper/emapper.py"

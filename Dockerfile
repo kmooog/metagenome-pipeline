@@ -60,7 +60,7 @@ RUN mkdir build
 WORKDIR build
 RUN cmake -DUSE_BMI2=OFF -DCMAKE_BUILD_TYPE=release ..
 RUN make -j4
-ENV PATH $PATH:/megahit/build/megahit
+ENV PATH $PATH:/root/megahit/build/megahit
 
 # python
 WORKDIR /root
@@ -83,27 +83,27 @@ RUN pip install --user --upgrade cutadapt
 WORKDIR /root
 RUN wget https://github.com/FelixKrueger/TrimGalore/archive/0.5.0.zip 
 RUN unzip 0.5.0.zip && rm 0.5.0.zip
-ENV PATH $PATH:/TrimGalore-0.5.0
+ENV PATH $PATH:/root/TrimGalore-0.5.0
 
 #FLASh
 WORKDIR /root
 RUN wget http://ccb.jhu.edu/software/FLASH/FLASH-1.2.11-Linux-x86_64.tar.gz
 RUN tar -xvf  FLASH-1.2.11-Linux-x86_64.tar.gz
 RUN rm FLASH-1.2.11-Linux-x86_64.tar.gz
-ENV PATH $PATH:/FLASH-1.2.11-Linux-x86_64
+ENV PATH $PATH:/root/FLASH-1.2.11-Linux-x86_64
 
 # BOWTIE2
 WORKDIR /root
 RUN wget https://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.3.4.3/bowtie2-2.3.4.3-linux-x86_64.zip
 RUN unzip bowtie2-2.3.4.3-linux-x86_64.zip
 RUN rm bowtie2-2.3.4.3-linux-x86_64.zip
-ENV PATH $PATH:/bowtie2-2.3.4.3-linux-x86_64
+ENV PATH $PATH:/root/bowtie2-2.3.4.3-linux-x86_64
 
 # install prinseq
 WORKDIR /root
 RUN wget https://sourceforge.net/projects/prinseq/files/standalone/prinseq-lite-0.20.4.tar.gz
 RUN tar xzvf prinseq-lite-0.20.4.tar.gz
-ENV PATH $PATH:/prinseq-lite-0.20.4
+ENV PATH $PATH:/root/prinseq-lite-0.20.4
 
 # install luigi
 WORKDIR /root
