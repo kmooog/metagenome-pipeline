@@ -76,13 +76,18 @@ RUN tar xzvf prinseq-lite-0.20.4.tar.gz
 ENV PATH $PATH:/root/prinseq-lite-0.20.4
 
 # install pip3
-
 RUN apt-get install -y python-pip python3-pip
+ENV PYTHONPATH "${PYTHONPATH}:/usr/local/lib/python3.6/dist-packages"
 
 # install luigi
 WORKDIR /root
+
 RUN pip3 install --upgrade pip
 RUN pip3 install luigi
+
+## update six for luigi
+RUN pip3 uninstall six -y
+RUN pip3 install six
 
 # install in-house pipeline
 WORKDIR /root
