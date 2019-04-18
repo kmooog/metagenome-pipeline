@@ -17,9 +17,8 @@ filename = args[1]
 cwd = str(Path.cwd())
 workind_dir = args[2]
 
-eggnog_mapper_path = "/work/G10800/kumay/eggnog-mapper/emapper.py"
-fmappath = "/work/G10800/kumay/FMAP"
-script_path = "/work/G10800/kumay/metagenome-pipeline/script/"
+script_path = "/root/metagenome-pipeline/script/"
+eggnog_mapper_path = ""
 
 class _1_TrimGalore(luigi.Task):
     task_namespace = 'metagenomes'
@@ -66,108 +65,81 @@ class _3_bowtie2(luigi.Task):
         print("_3_bowtie2: output")
         return luigi.LocalTarget(filename + ".nophix.fastq") 
 
-class _35_prinseq(luigi.Task):
+class _4_prinseq(luigi.Task):
     task_namespace = 'metagenomes'
 
     def requires(self):
-        print("_35_prinseq: requires")
+        print("_4_prinseq: requires")
         return _3_bowtie2()
 
     def run(self):
-        print("_35_prinseq: run")
+        print("_4_prinseq: run")
         popen = subprocess.Popen('prinseq-lite.pl -fastq {0}.nophix.fastq -out_good {0}_prinseq -lc_method dust -lc_threshold 7'.format(filename).split(),cwd=cwd)
         popen.wait()
     def output(self):
-        print("_35_prinseq: output")
+        print("_4_prinseq: output")
         return luigi.LocalTarget(filename + "_prinseq.fastq") 
 
-class fmap(luigi.Task):
+class _5_megahit(luigi.Task):
     task_namespace = 'metagenomes'
 
     def requires(self):
-        print("fmap: requires")
-        return _35_prinseq()
+        print("_5_megahit: requires")
+        return _4_prinseq()
 
     def run(self):
-        print("fmap: run")
-        with open('blastx_hits_{0}.txt'.format(filename), 'w') as output:
-           stdout = subprocess.Popen('perl {0}/FMAP_mapping.pl {1}_prinseq.fastq'.format(fmappath,filename).split(),stdout=subprocess.PIPE,cwd=cwd).stdout.readlines()
-           for line in stdout:
-              output.write(line.decode('utf-8'))
-        with open('abundance_{0}.txt'.format(filename), 'w') as output:
-           stdout = subprocess.Popen('perl {0}/FMAP_quantification.pl blastx_hits_{1}.txt'.format(fmappath,filename).split(),stdout=subprocess.PIPE,cwd=cwd).stdout.readlines()   
-           for line in stdout:
-              output.write(line.decode('utf-8'))
-    def output(self):
-        print("fmap: output")
-        return luigi.LocalTarget("abundance_" + filename + ".txt")
-
-
-
-
-class _4_megahit(luigi.Task):
-    task_namespace = 'metagenomes'
-
-    def requires(self):
-        print("_4_megahit: requires")
-        return _35_prinseq()
-
-    def run(self):
-        print("_4_megahit: run")
+        print("_5_megahit: run")
         popen = subprocess.Popen('sh {0}run_megahit.sh {1} {2}'.format(script_path,filename + "_prinseq.fastq",workind_dir).split(),cwd=cwd)
         popen.wait()
 
     def output(self):
-        print("_4_megahit: output")
+        print("_5_megahit: output")
         outputDict = {}
         return luigi.LocalTarget(filename + "_prinseq_assembled/final.contigs.fa")
 
-class _5_Prodigal(luigi.Task):
+class _6_Prodigal(luigi.Task):
     task_namespace = 'metagenomes'
 
     def requires(self):
-        print("_5_Prodigal: requires")
-        return _4_megahit()
+        print("_6_Prodigal: requires")
+        return _5_megahit()
 
     def run(self):
-        print("_5_Prodigal: run")
+        print("_6_Prodigal: run")
         popen = subprocess.Popen('prodigal -d {0}_prodigal.fna -a {0}_prodigal.faa -i {0}_prinseq_assembled/final.contigs.fa -p meta -o {0}.genes -q'.format(filename).split(),cwd=cwd)
         popen.wait()
     def output(self):
-        print("_5_Prodigal: output")
+        print("_6_Prodigal: output")
         return luigi.LocalTarget(filename + "_prodigal.faa") 
 
-class _6_eggnog_mapper(luigi.Task):
+class _7_eggnog_mapper(luigi.Task):
     task_namespace = 'metagenomes'
     def requires(self):
-        print("_6_eggnog_mapper: requires")
-        return _5_Prodigal()
+        print("_7_eggnog_mapper: requires")
+        return _6_Prodigal()
 
     def run(self):
-        print("_6_eggnog_mapper: run")
+        print("_7_eggnog_mapper: run")
         print('sh {0}run_eggnog-mapper.sh {1} {2} {3} {4}'.format(script_path,workind_dir,eggnog_mapper_path,filename + "_prodigal.faa", filename + ".emapper"))
         popen = subprocess.Popen('sh {0}run_eggnog-mapper.sh {1} {2} {3} {4}'.format(script_path,workind_dir,eggnog_mapper_path,filename + "_prodigal.faa", filename + ".emapper").split(),cwd=cwd)
         popen.wait()
     def output(self):
-        print("_6_eggnog_mapper: output")
+        print("_7_eggnog_mapper: output")
         return luigi.LocalTarget(filename + ".emapper") 
 
-class _7_bwa(luigi.Task):
+class _8_bwa(luigi.Task):
     task_namespace = 'metagenomes'
     
     def requires(self):
-        print("_7_bwa: requires")
-        return _6_eggnog_mapper()
+        print("_8_bwa: requires")
+        return _7_eggnog_mapper()
 
     def run(self):
-        print("_7_bwa: run")
+        print("_8_bwa: run")
     
     def output(self):
-        print("_7_bwa: output")
+        print("_8_bwa: output")
         return luigi.LocalTarget(filename+"_bwa")
 
-
-
-
 if __name__ == '__main__':
-    luigi.run(['metagenomes.fmap', '--workers', '1', '--local-scheduler'])
+    luigi.run(['metagenomes._6_Prodigal', '--workers', '1', '--local-scheduler'])
