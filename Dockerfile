@@ -47,7 +47,8 @@ WORKDIR /root
 
 # cutadapt(for TrimGalore)
 WORKDIR /root
-RUN pip install --user --upgrade cutadapt
+RUN pip3 install --user --upgrade cutadapt
+ENV PATH $PATH:~/.local/bin/
 
 # TrimGalore
 WORKDIR /root
