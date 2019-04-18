@@ -25,7 +25,7 @@ class _1_TrimGalore(luigi.Task):
 
     def run(self):
         print("_1_TrimGalore: run")
-        print('sh {0}run_TrimGalore.sh {1} {2}'.format(script_path,os.getcwd(),filename))
+        print('bash {0}run_TrimGalore.sh {1} {2}'.format(script_path,os.getcwd(),filename))
         popen = subprocess.Popen('sh {0}run_TrimGalore.sh {1} {2}'.format(script_path,workind_dir,filename).split(),cwd=cwd)
         popen.wait() 
     
@@ -44,7 +44,7 @@ class _2_Flash(luigi.Task):
         return _1_TrimGalore()
     def run(self):
         print("_2_Flash: run")
-        cmd = 'sh {0}run_FLASH.sh'.format(script_path)
+        cmd = 'bash {0}run_FLASH.sh'.format(script_path)
         os.system(cmd)
     def output(self):
         print("_2_Flash: output")
@@ -59,7 +59,7 @@ class _3_bowtie2(luigi.Task):
 
     def run(self):
         print("_3_bowtie2: run")
-        cmd = 'sh {0}run_bowtie2.sh'.format(script_path)
+        cmd = 'bash {0}run_bowtie2.sh'.format(script_path)
         os.system(cmd)
     def output(self):
         print("_3_bowtie2: output")
@@ -89,7 +89,7 @@ class _5_megahit(luigi.Task):
 
     def run(self):
         print("_5_megahit: run")
-        popen = subprocess.Popen('sh {0}run_megahit.sh {1} {2}'.format(script_path,filename + "_prinseq.fastq",workind_dir).split(),cwd=cwd)
+        popen = subprocess.Popen('bash {0}run_megahit.sh {1} {2}'.format(script_path,filename + "_prinseq.fastq",workind_dir).split(),cwd=cwd)
         popen.wait()
 
     def output(self):
@@ -120,8 +120,8 @@ class _7_eggnog_mapper(luigi.Task):
 
     def run(self):
         print("_7_eggnog_mapper: run")
-        print('sh {0}run_eggnog-mapper.sh {1} {2} {3} {4}'.format(script_path,workind_dir,eggnog_mapper_path,filename + "_prodigal.faa", filename + ".emapper"))
-        popen = subprocess.Popen('sh {0}run_eggnog-mapper.sh {1} {2} {3} {4}'.format(script_path,workind_dir,eggnog_mapper_path,filename + "_prodigal.faa", filename + ".emapper").split(),cwd=cwd)
+        print('bash {0}run_eggnog-mapper.sh {1} {2} {3} {4}'.format(script_path,workind_dir,eggnog_mapper_path,filename + "_prodigal.faa", filename + ".emapper"))
+        popen = subprocess.Popen('bash {0}run_eggnog-mapper.sh {1} {2} {3} {4}'.format(script_path,workind_dir,eggnog_mapper_path,filename + "_prodigal.faa", filename + ".emapper").split(),cwd=cwd)
         popen.wait()
     def output(self):
         print("_7_eggnog_mapper: output")
