@@ -30,7 +30,7 @@ RUN mkdir build
 WORKDIR build
 RUN cmake -DUSE_BMI2=OFF -DCMAKE_BUILD_TYPE=release ..
 RUN make -j4
-ENV PATH $PATH:/root/megahit/build/megahit
+ENV PATH $PATH:/root/megahit/build/
 
 # python
 WORKDIR /root
@@ -74,6 +74,7 @@ ENV PATH $PATH:/root/bowtie2-2.3.4.3-linux-x86_64
 WORKDIR /root
 RUN wget https://sourceforge.net/projects/prinseq/files/standalone/prinseq-lite-0.20.4.tar.gz --no-check-certificate
 RUN tar xzvf prinseq-lite-0.20.4.tar.gz
+RUN chmod 777  /root/prinseq-lite-0.20.4/prinseq-lite.pl
 ENV PATH $PATH:/root/prinseq-lite-0.20.4
 
 # install pip3
@@ -95,4 +96,9 @@ WORKDIR /root
 RUN pip3 install pathlib
 RUN git clone https://github.com/kmooog/metagenome-pipeline.git
 
-
+#Prodigal
+WORKDIR /root
+RUN git clone https://github.com/hyattpd/Prodigal.git
+WORKDIR /root/Prodigal
+make install
+WORKDIR /root
