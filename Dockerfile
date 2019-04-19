@@ -45,11 +45,6 @@ RUN wget https://bootstrap.pypa.io/get-pip.py --no-check-certificate
 RUN python get-pip.py
 WORKDIR /root
 
-# cutadapt(for TrimGalore)
-WORKDIR /root
-RUN pip3 install --user --upgrade cutadapt
-ENV PATH $PATH:~/.local/bin/
-
 # TrimGalore
 WORKDIR /root
 RUN wget https://github.com/FelixKrueger/TrimGalore/archive/0.5.0.zip --no-check-certificate 
@@ -81,9 +76,13 @@ ENV PATH $PATH:/root/prinseq-lite-0.20.4
 RUN apt-get install -y python-pip python3-pip
 ENV PYTHONPATH "${PYTHONPATH}:/usr/local/lib/python3.6/dist-packages"
 
+# cutadapt(for TrimGalore)
+WORKDIR /root
+RUN pip3 install --user --upgrade cutadapt
+ENV PATH $PATH:~/.local/bin/
+
 # install luigi
 WORKDIR /root
-
 RUN pip3 install --upgrade pip
 RUN pip3 install luigi
 
