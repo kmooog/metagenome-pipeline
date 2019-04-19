@@ -100,5 +100,5 @@ RUN git clone https://github.com/kmooog/metagenome-pipeline.git
 WORKDIR /root
 RUN git clone https://github.com/hyattpd/Prodigal.git
 WORKDIR /root/Prodigal
-make install
+RUN make install
 WORKDIR /root
