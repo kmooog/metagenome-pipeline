@@ -4,6 +4,7 @@ MAINTAINER YOHEI_KUMAGAI
 # utils
 RUN apt-get update
 RUN apt-get install -y \ 
+           vi \
            wget \
            tar \
            gcc \
@@ -93,7 +94,7 @@ RUN pip3 install six
 # install in-house pipeline
 WORKDIR /root
 RUN pip3 install pathlib
-RUN git clone https://github.com/kmooog/metagenome-pipeline.git 
+RUN git clone https://github.com/kmooog/metagenome-pipeline.git
 
 # Prodigal
 WORKDIR /root
