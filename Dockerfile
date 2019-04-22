@@ -95,9 +95,13 @@ WORKDIR /root
 RUN pip3 install pathlib
 RUN git clone https://github.com/kmooog/metagenome-pipeline.git
 
-#Prodigal
+# Prodigal
 WORKDIR /root
 RUN git clone https://github.com/hyattpd/Prodigal.git
 WORKDIR /root/Prodigal
 RUN make install
 WORKDIR /root
+
+# add permission
+WORKDIR /
+RUN chmod 777 root
