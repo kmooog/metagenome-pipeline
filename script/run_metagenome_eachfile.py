@@ -9,6 +9,7 @@ cwd = pathlib.Path.cwd()
 script_path = "/root/metagenome-pipeline/script/"
 for i in range(int(args[1]),int(args[2])+1):
    print(i)
+   i = str(i).zfill(3)
    workdir = cwd/str(i)
    workdir.mkdir()
    workdir = str(workdir)
