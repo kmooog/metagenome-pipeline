@@ -4,7 +4,6 @@ MAINTAINER YOHEI_KUMAGAI
 # utils
 RUN apt-get update
 RUN apt-get install -y \ 
-           vim \
            wget \
            tar \
            gcc \
@@ -18,6 +17,7 @@ RUN apt-get install -y \
            git \
            unzip \
            --no-install-recommends
+RUN apt-get install -y vim
 
 # change git config
 RUN git config --global http.sslVerify false
