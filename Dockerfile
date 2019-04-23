@@ -4,7 +4,7 @@ MAINTAINER YOHEI_KUMAGAI
 # utils
 RUN apt-get update
 RUN apt-get install -y \ 
-           vi \
+           vim \
            wget \
            tar \
            gcc \
