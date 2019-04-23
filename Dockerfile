@@ -80,7 +80,8 @@ ENV PYTHONPATH "${PYTHONPATH}:/usr/local/lib/python3.6/dist-packages"
 # cutadapt(for TrimGalore)
 WORKDIR /root
 RUN pip3 install --user --upgrade cutadapt
-ENV PATH $PATH:~/.local/bin/
+RUN chmod 777 /root/.local/bin/cutadapt
+ENV PATH $PATH:/root/.local/bin/cutadapt
 
 # install luigi
 WORKDIR /root
