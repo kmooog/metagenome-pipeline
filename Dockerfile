@@ -16,6 +16,7 @@ RUN apt-get install -y \
            python \
            git \
            unzip \
+           cwltool \
            --no-install-recommends
 RUN apt-get install -y vim
 

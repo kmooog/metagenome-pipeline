@@ -1,0 +1,6 @@
+file1:
+  class: File
+  path: 116_1.fq.gz
+file2:
+  class: File
+  path: 116_2.fq.gz
