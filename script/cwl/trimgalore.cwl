@@ -12,4 +12,13 @@ inputs:
     type: File
     inputBinding:
       position: 2
-outputs: []
+outputs:
+  tg_out1:
+    type: File
+    outputBinding:
+      glob: '*_1_val_1.fq'
+  tg_out2:
+    type: File
+    outputBinding:
+      glob: '*_2_val_2.fq'
+ 
