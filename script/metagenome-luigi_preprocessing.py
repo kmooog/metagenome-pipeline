@@ -142,4 +142,4 @@ class _8_bwa(luigi.Task):
         return luigi.LocalTarget(filename+"_bwa")
 
 if __name__ == '__main__':
-    luigi.run(['metagenomes._6_Prodigal', '--workers', '1', '--local-scheduler'])
+    luigi.run(['metagenomes._4_prinseq', '--workers', '1', '--local-scheduler'])
