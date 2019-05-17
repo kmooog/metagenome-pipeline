@@ -17,8 +17,8 @@ RUN apt-get install -y \
            git \
            unzip \
            cwltool \
+           vim \
            --no-install-recommends
-RUN apt-get install -y vim
 
 # change git config
 RUN git config --global http.sslVerify false
@@ -78,18 +78,9 @@ ENV PATH $PATH:/root/prinseq-lite-0.20.4
 RUN apt-get install -y python-pip python3-pip
 ENV PYTHONPATH "${PYTHONPATH}:/usr/local/lib/python3.6/dist-packages"
 
-# cutadapt(for TrimGalore)
+# cutadapt (for TrimGalore)
 WORKDIR /root
 RUN pip3 install cutadapt
-
-# install luigi
-WORKDIR /root
-RUN pip3 install --upgrade pip
-RUN pip3 install luigi
-
-## update six for luigi
-RUN pip3 uninstall six -y
-RUN pip3 install six
 
 # install in-house pipeline
 WORKDIR /root
