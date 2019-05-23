@@ -5,18 +5,14 @@ label: PreProcessing
 $namespaces:
   sbg: 'https://www.sevenbridges.com/'
 inputs:
-  - id: file1
-    type: File
-    'sbg:x': -565
-    'sbg:y': 191.14759826660156
-  - id: file2
-    type: File
-    'sbg:x': -576
-    'sbg:y': -39
   - id: phix
     type: string
     'sbg:x': -186
     'sbg:y': -99
+  - id: file1
+    type: File
+    'sbg:x': -339
+    'sbg:y': 26
 outputs:
   - id: prinseq_out
     outputSource:
@@ -26,35 +22,12 @@ outputs:
     'sbg:x': 365
     'sbg:y': -4
 steps:
-  - id: trimgalore
-    in:
-      - id: file1
-        source: file1
-      - id: file2
-        source: file2
-    out:
-      - id: tg_out1
-      - id: tg_out2
-    run: ./trimgalore.cwl
-    'sbg:x': -334.3984375
-    'sbg:y': 112
-  - id: flash
-    in:
-      - id: file1
-        source: trimgalore/tg_out1
-      - id: file2
-        source: trimgalore/tg_out2
-    out:
-      - id: flash_out
-    run: ./flash.cwl
-    'sbg:x': -119
-    'sbg:y': 113
   - id: bowtie2
     in:
       - id: bowtie_log
         default: bowtie_log
       - id: filename
-        source: flash/flash_out
+        source: trimgalore_single/tg_out1
       - id: phix
         source: phix
       - id: unmapped
@@ -79,4 +52,13 @@ steps:
     run: ./prinseq.cwl
     'sbg:x': 202
     'sbg:y': -1
+  - id: trimgalore_single
+    in:
+      - id: file1
+        source: file1
+    out:
+      - id: tg_out1
+    run: ./trimgalore_single.cwl
+    'sbg:x': -170
+    'sbg:y': 21
 requirements: []
