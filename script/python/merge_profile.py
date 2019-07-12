@@ -1,32 +1,16 @@
-import sys
+import pandas as pd
 
-eggnog_dict = {}
+df = pd.DataFrame()
+start = 723
+end = 955
+for i in range (start,end+1):
+    print(i)
+    if i == start:
+        df = pd.read_csv("normalized_by_sum_" + str(i), names=["genes","abundance"])
+    else:
+        df_tmp = pd.read_csv("normalized_by_sum_" + str(i), names=["genes","abundance"])
+        df = pd.merge(df,df_tmp,how='outer',on='genes')
+        
+df.fillna(0).to_csv('../merged_profile.csv')
 
-for a in open("/lustre7/home/kumay/metagenome_data/clusterd_genes/eggnog-mapper/chunks/emapper_output.emapper.annotations"):
-   eggnog_dict[a.split("\t")[0]] = a.strip()
-
-count_dict = {}
-
-for i in range (723,956):
-   count_dict[i] = {}
-   sum_count = 0
-   with open(str(i)+"/normalized_count") as norm:
-      for a in norm:
-         tmpid, tmpcount = (a.split(",")[0],double(a.split(",")[1].strip()))
-         sum_count += tmpcount
-         count_dict[i][tmpid] = tmpcount
-      for a in count_dict[i]:
-         count_dict[a] = count_dict[a]/sum_count
-out = open("emapper_profile","w")
-for a in eggnog_dict:
-   out.write(a)
-   for i in range (723,956):
-      out.write(count_dict[a])
-      
-       
-
-
-
-         
-  
 
