@@ -24,6 +24,24 @@ outputs:
     type: File
     'sbg:x': 368
     'sbg:y': -5
+  - id: flash_out
+    outputSource:
+      - flash/flash_out
+    type: File
+    'sbg:x': 33.640235900878906
+    'sbg:y': 221.1243133544922
+  - id: tg_out1
+    outputSource:
+      - trimgalore/tg_out1
+    type: File
+    'sbg:x': -241.22164916992188
+    'sbg:y': 261.1795654296875
+  - id: tg_out2
+    outputSource:
+      - trimgalore/tg_out2
+    type: File
+    'sbg:x': -278.51446533203125
+    'sbg:y': -53.73756790161133
 steps:
   - id: trimgalore
     in:
