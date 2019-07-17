@@ -80,11 +80,6 @@ ENV PATH $PATH:/root/prinseq-lite-0.20.4
 RUN apt-get install -y python-pip python3-pip
 ENV PYTHONPATH "${PYTHONPATH}:/usr/local/lib/python3.6/dist-packages"
 
-# install uchime
-WORKDIR /root
-RUN wget https://drive5.com/uchime/uchime4.2.40_i86linux32
-RUN chmod 777 uchime4.2.40_i86linux32
-
 # cutadapt (for TrimGalore)
 WORKDIR /root
 RUN pip3 install cutadapt
