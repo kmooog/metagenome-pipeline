@@ -87,7 +87,7 @@ RUN pip3 install cutadapt
 # install in-house pipeline
 WORKDIR /root
 RUN pip3 install pathlib
-RUN git clone https://github.com/kmooog/metagenome-pipeline.git 
+RUN git  clone https://github.com/kmooog/metagenome-pipeline.git 
 
 # Prodigal
 WORKDIR /root
@@ -95,6 +95,21 @@ RUN git clone https://github.com/hyattpd/Prodigal.git
 WORKDIR /root/Prodigal
 RUN make install
 WORKDIR /root
+
+# install VIBRANT
+WORKDIR /root
+RUN apt install hmmer
+RUN pip3 install biopython
+RUN pip3 install pandas
+RUN pip3 install matplotlib
+RUN pip3 install seaborn
+RUN pip3 install numpy
+RUN pip3 install --upgrade scikit-learn==0.21.3
+RUN pip3 install pickle-mixin
+RUN git clone https://github.com/AnantharamanLab/VIBRANT
+RUN chmod -R 777 VIBRANT
+WORKDIR VIBRANT/databases
+RUN python3 VIBRANT_setup.py
 
 # add permission
 WORKDIR /
