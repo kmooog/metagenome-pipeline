@@ -98,7 +98,7 @@ WORKDIR /root
 
 # install VIBRANT
 WORKDIR /root
-RUN apt install hmmer
+RUN apt-get --assume-yes install hmmer
 RUN pip3 install biopython
 RUN pip3 install pandas
 RUN pip3 install matplotlib
